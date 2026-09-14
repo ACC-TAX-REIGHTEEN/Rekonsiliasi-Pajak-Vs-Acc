@@ -2,28 +2,9 @@ import pandas as pd
 import glob
 import os
 import xlsxwriter
-import configparser
 
 def main():
     print("--> Memulai proses...")
-
-    config_file = 'config.conf'
-    calc_gap = 0.0
-
-    if os.path.exists(config_file):
-        try:
-            config = configparser.ConfigParser()
-            config.read(config_file)
-            
-            if 'CALC' in config and 'calc_gap' in config['CALC']:
-                calc_gap = float(config['CALC']['calc_gap'])
-                print(f"--> Konfigurasi ditemukan: Toleransi selisih (calc_gap) = {calc_gap}")
-            else:
-                print("--> Seksi [CALC] atau kunci 'calc_gap' tidak ditemukan. Menggunakan default gap = 0.0")
-        except Exception as e:
-            print(f"--> Gagal membaca {config_file}: {e}. Menggunakan default gap = 0.0")
-    else:
-        print(f"--> File {config_file} tidak ditemukan. Menggunakan default gap = 0.0")
 
     file_acc = 'Acc_temp.xlsx'
     files_export = glob.glob('data_export*.xlsx')
@@ -87,8 +68,7 @@ def main():
         val_ppn = row['PPN'] if pd.notnull(row['PPN']) else 0
         
         selisih_nilai = abs(val_pajak - val_ppn)
-        
-        if selisih_nilai > calc_gap: 
+        if selisih_nilai > 1.0: 
             keterangan.append('Selisih Nominal')
             
         tgl_acc = row['Tgl. Pajak']
