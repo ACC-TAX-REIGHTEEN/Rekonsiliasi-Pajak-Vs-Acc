@@ -17,8 +17,8 @@ def clean_dapur_folder(folder_path):
 root_dir = os.getcwd()
 dapur_dir = os.path.join(root_dir, "Dapur")
 acc_file = "Acc.xls"
-export_pattern = "data_export*.xlsx"
-dapur_required_files = ["__init__.py", "1_AccCleaner.py", "2_CompareAccVsCtx.py"]
+export_pattern = "data*.xlsx"
+dapur_required_files = ["__init__.py", "0_TransformData.py", "1_AccCleaner.py", "2_CompareAccVsCtx.py"]
 
 missing_items = []
 
@@ -51,6 +51,9 @@ try:
     target_export_file = export_files[0]
     print(f"--> Menyalin {os.path.basename(target_export_file)} ke Dapur")
     shutil.copy(target_export_file, dapur_dir)
+    
+    print("--> Menjalankan 0_TransformData.py")
+    subprocess.run([sys.executable, "0_TransformData.py"], cwd=dapur_dir, check=True)
 
     print("--> Menjalankan 1_AccCleaner.py")
     subprocess.run([sys.executable, "1_AccCleaner.py"], cwd=dapur_dir, check=True)
